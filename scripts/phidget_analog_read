@@ -1,0 +1,49 @@
+#! /usr/bin/env ruby
+
+require 'orocos'
+require 'base/float'
+Orocos.initialize
+Orocos.load_typekit 'phidgets'
+
+known_types = Types::Phidgets::DEVICE_TYPES.keys.keys.map(&:to_s).sort
+if ARGV.size != 2
+    puts "phidget_analog_read TYPE PORT_ID"
+    puts "  known types: #{known_types.join(", ")}"
+    exit 1
+end
+
+type    = ARGV[0]
+port_id = Integer(ARGV[1])
+
+type = type.upcase
+
+if !known_types.include?(type)
+    puts "unknown phidget analog device type #{type}, known types are:"
+    puts "  #{known_types.join(", ")}"
+    exit 1
+end
+
+Orocos.run 'phidgets::InterfaceTask' => 'phidget' do
+    task = Orocos.name_service.get 'phidget'
+
+    device = Types::Phidgets::AnalogDevice.new \
+        :port => port_id,
+        :name => 'samples',
+        :device_type => type,
+        :sensitivity => Base.unset,
+        :data_rate => 8
+
+    task.analog_devices = [device]
+    task.configure
+
+    sample_reader = task.samples.reader
+    puts "Data type: #{task.samples.type.name}"
+    task.start
+    
+    Orocos.watch(task) do
+        if s = sample_reader.read_new
+            pp s
+            nil
+        end
+    end
+end
