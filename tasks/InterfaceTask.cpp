@@ -37,7 +37,7 @@ bool InterfaceTask::configureHook()
         AnalogDevice const& device(devices[i]);
         AnalogDeviceHandler handler(getAnalogDeviceHandler(devices[i].device_type));
 
-        CPhidgetInterfaceKit_set_OnSensorChange_Handler(phidget, handler.changeHandler, NULL);
+        CPhidgetInterfaceKit_set_OnSensorChange_Handler(phidget, handler.changeHandler, this);
 
         RTT::base::PortInterface* port = handler.createPort(device.name);
         addPort(*port);
