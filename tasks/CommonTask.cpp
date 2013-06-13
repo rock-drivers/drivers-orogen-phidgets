@@ -73,5 +73,8 @@ void CommonTask::stopHook()
 }
 void CommonTask::cleanupHook()
 {
+    CPhidget_close(mPhidget);
+    CPhidget_delete(mPhidget);
     CommonTaskBase::cleanupHook();
 }
+
