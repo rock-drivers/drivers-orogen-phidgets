@@ -3,6 +3,15 @@ name "phidgets"
 import_types_from 'base'
 import_types_from "phidgetsTypes.hpp"
 
+# This is required for oroGen to generate the code needed so that these types
+# can be used on ports. This is only needed because we are creating the ports
+# dynamically
+typekit do
+    export_types '/phidgets/Humidity',
+        '/phidgets/Temperature',
+        '/phidgets/Voltage'
+end
+
 # Base implementation for all phidgets
 task_context 'CommonTask' do
     abstract
