@@ -6,6 +6,12 @@
 using namespace phidgets;
 
 template<typename T>
+RTT::base::PortInterface* createOutputPort(std::string const& name)
+{
+    return new RTT::OutputPort<T>(name);
+}
+
+template<typename T>
 void writeSample(void* usrptr, int Index, T const& sample)
 {
     InterfaceTask* task = reinterpret_cast<InterfaceTask*>(usrptr);
@@ -61,14 +67,15 @@ static int Humidity1125_DeviceToAnalog(float value)
 
 AnalogDeviceHandler phidgets::getAnalogDeviceHandler(DEVICE_TYPES deviceType)
 {
+    typedef AnalogDeviceHandler::PortCreationFn PortCreationFn;
     switch(deviceType)
     {
         case RAW:
-            return AnalogDeviceHandler(RAW, Raw_ChangedHandler, Raw_DeviceToAnalog);
+            return AnalogDeviceHandler(RAW, Raw_ChangedHandler, Raw_DeviceToAnalog, static_cast<PortCreationFn>(createOutputPort<Voltage>));
         case TEMPERATURE_1125:
-            return AnalogDeviceHandler(TEMPERATURE_1125, Temperature1125_ChangedHandler, Temperature1125_DeviceToAnalog);
+            return AnalogDeviceHandler(TEMPERATURE_1125, Temperature1125_ChangedHandler, Temperature1125_DeviceToAnalog, &createOutputPort<Temperature>);
         case HUMIDITY_1125:
-            return AnalogDeviceHandler(HUMIDITY_1125, Humidity1125_ChangedHandler, Humidity1125_DeviceToAnalog);
+            return AnalogDeviceHandler(HUMIDITY_1125, Humidity1125_ChangedHandler, Humidity1125_DeviceToAnalog, &createOutputPort<Humidity>);
         default: throw std::runtime_error("I do not know how to handle this analog device");
     }
 }

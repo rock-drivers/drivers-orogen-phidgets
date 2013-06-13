@@ -39,6 +39,9 @@ bool InterfaceTask::configureHook()
 
         CPhidgetInterfaceKit_set_OnSensorChange_Handler(phidget, handler.changeHandler, NULL);
 
+        RTT::base::PortInterface* port = handler.createPort(device.name);
+        addPort(*port);
+        mPorts.push_back(port);
         if (device.data_rate)
             CPhidgetInterfaceKit_setDataRate(phidget, device.port, device.data_rate);
         else if (device.sensitivity)
