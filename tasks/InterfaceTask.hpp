@@ -25,6 +25,7 @@ namespace phidgets {
     {
 	friend class InterfaceTaskBase;
     protected:
+        std::vector<RTT::base::PortInterface*> mPorts;
         int mNumInputs;
         int mNumOutputs;
         int mNumSensors;

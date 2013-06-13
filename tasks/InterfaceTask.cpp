@@ -87,6 +87,15 @@ void InterfaceTask::stopHook()
 }
 void InterfaceTask::cleanupHook()
 {
+    // We must call this first, to make sure that the callbacks are not going
+    // to be called before we delete the ports
     InterfaceTaskBase::cleanupHook();
+
+    for (size_t i = 0; i < mPorts.size(); ++i)
+    {
+        provides()->removePort(mPorts[i]->getName());
+        delete mPorts[i];
+    }
+    mPorts.clear();
 }
 
