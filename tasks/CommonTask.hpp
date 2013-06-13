@@ -31,6 +31,8 @@ namespace phidgets {
 
     protected:
         void setPhidgetHandle(_CPhidget* handle);
+        _CPhidget* getPhidgetHandle() const;
+        void phidgetHandleError(int result);
 
     public:
         /** TaskContext constructor for CommonTask

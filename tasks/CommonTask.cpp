@@ -24,6 +24,20 @@ void CommonTask::setPhidgetHandle(CPhidgetHandle handle)
 {
     mPhidget = handle;
 }
+_CPhidget* CommonTask::getPhidgetHandle() const
+{
+    return mPhidget;
+}
+
+void CommonTask::phidgetHandleError(int errorCode)
+{
+    if (errorCode != 0)
+    {
+        const char *errorDescription;
+        phidgetHandleError(CPhidget_getErrorDescription(errorCode, &errorDescription));
+        throw std::runtime_error(errorDescription);
+    }
+}
 
 /// The following lines are template definitions for the various state machine
 // hooks defined by Orocos::RTT. See CommonTask.hpp for more detailed
@@ -34,7 +48,7 @@ bool CommonTask::configureHook()
     if (! CommonTaskBase::configureHook())
         return false;
 
-    CPhidget_open(mPhidget, -1);
+    phidgetHandleError(CPhidget_open(mPhidget, -1));
     return true;
 }
 bool CommonTask::startHook()
@@ -42,14 +56,7 @@ bool CommonTask::startHook()
     if (! CommonTaskBase::startHook())
         return false;
 
-    int result = CPhidget_waitForAttachment((CPhidgetHandle)mPhidget, 10000);
-    if (result)
-    {
-        char const* err;
-        CPhidget_getErrorDescription(result, &err);
-        log(RTT::Error) << "Problem waiting for attachment: " << err << RTT::endlog();
-        return false;
-    }
+    phidgetHandleError(CPhidget_waitForAttachment((CPhidgetHandle)mPhidget, 2000));
     return true;
 }
 void CommonTask::updateHook()

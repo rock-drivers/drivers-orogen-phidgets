@@ -42,13 +42,6 @@ bool InterfaceTask::configureHook()
         RTT::base::PortInterface* port = handler.createPort(device.name);
         addPort(*port);
         mPorts.push_back(port);
-        if (device.data_rate)
-            CPhidgetInterfaceKit_setDataRate(phidget, device.port, device.data_rate);
-        else if (device.sensitivity)
-        {
-            int trigger = handler.deviceToAnalog(device.sensitivity);
-            CPhidgetInterfaceKit_setSensorChangeTrigger(phidget, device.port, trigger);
-        }
     }
 
     if (! InterfaceTaskBase::configureHook())
@@ -59,6 +52,30 @@ bool InterfaceTask::startHook()
 {
     if (! InterfaceTaskBase::startHook())
         return false;
+
+    CPhidgetInterfaceKitHandle phidget = (CPhidgetInterfaceKitHandle)getPhidgetHandle();
+
+    std::vector<phidgets::AnalogDevice> const& devices =
+        _analog_devices.get();
+    for (size_t i = 0; i < devices.size(); ++i)
+    {
+        AnalogDevice const& device(devices[i]);
+        AnalogDeviceHandler handler(getAnalogDeviceHandler(devices[i].device_type));
+        if (device.data_rate)
+        {
+            phidgetHandleError(
+                    CPhidgetInterfaceKit_setSensorChangeTrigger(phidget, device.port, 0));
+            phidgetHandleError(
+                    CPhidgetInterfaceKit_setDataRate(phidget, device.port, device.data_rate));
+        }
+        else if (device.sensitivity)
+        {
+            int trigger = handler.deviceToAnalog(device.sensitivity);
+            phidgetHandleError(
+                    CPhidgetInterfaceKit_setSensorChangeTrigger(phidget, device.port, trigger));
+        }
+    }
+
 
     return true;
 }
