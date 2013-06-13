@@ -1,0 +1,16 @@
+name "phidgets"
+
+import_types_from 'base'
+import_types_from "phidgetsTypes.hpp"
+
+# Task that reads from the Phidget temperature sensor
+task_context "TemperatureTask" do
+    # This is the default from now on, and should not be removed. Rock will
+    # transition to a setup where all components use a configuration step.
+    needs_configuration
+
+    output_port 'temperature', '/phidgets/Temperature'
+
+    periodic 0.1
+end
+
