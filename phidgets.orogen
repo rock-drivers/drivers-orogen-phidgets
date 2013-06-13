@@ -3,14 +3,45 @@ name "phidgets"
 import_types_from 'base'
 import_types_from "phidgetsTypes.hpp"
 
-# Task that reads from the Phidget temperature sensor
-task_context "TemperatureTask" do
+# Base implementation for all phidgets
+task_context 'CommonTask' do
     # This is the default from now on, and should not be removed. Rock will
     # transition to a setup where all components use a configuration step.
     needs_configuration
 
-    output_port 'temperature', '/phidgets/Temperature'
+    exception_states :PHIDGET_ERROR
 
     periodic 0.1
 end
 
+# Task that reads from the Phidget temperature sensor
+task_context "TemperatureTask" do
+    subclasses 'phidgets::CommonTask'
+
+    # This is the default from now on, and should not be removed. Rock will
+    # transition to a setup where all components use a configuration step.
+    needs_configuration
+
+    output_port 'temperature_samples', '/phidgets/Temperature'
+end
+
+# Task that gives access to an interface board
+task_context 'InterfaceTask' do
+    subclasses 'phidgets::CommonTask'
+
+    # This is the default from now on, and should not be removed. Rock will
+    # transition to a setup where all components use a configuration step.
+    needs_configuration
+
+    # Configuration for additional converted outputs, e.g. converting an
+    # analog input into a temperature reading
+    #
+    # A specific output port of the relevant type will be created using the
+    # device name (contained in the phidgets::Device structure). The mapping
+    # from device type to data type is as follows:
+    #
+    # * RAW: phidgets::Voltage
+    # * TEMPERATURE_1125: phidgets::Temperature
+    # * HUMIDITY_1125: phidgets::Humidity
+    property 'analog_devices', '/std/vector</phidgets/AnalogDevice>'
+end

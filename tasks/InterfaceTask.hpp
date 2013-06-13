@@ -1,15 +1,13 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.hpp */
 
-#ifndef PHIDGETS_TEMPERATURETASK_TASK_HPP
-#define PHIDGETS_TEMPERATURETASK_TASK_HPP
+#ifndef PHIDGETS_INTERFACETASK_TASK_HPP
+#define PHIDGETS_INTERFACETASK_TASK_HPP
 
-#include "phidgets/TemperatureTaskBase.hpp"
-
-struct _CPhidgetTemperatureSensor;
+#include "phidgets/InterfaceTaskBase.hpp"
 
 namespace phidgets {
 
-    /*! \class TemperatureTask 
+    /*! \class InterfaceTask 
      * \brief The task context provides and requires services. It uses an ExecutionEngine to perform its functions.
      * Essential interfaces are operations, data flow ports and properties. These interfaces have been defined using the oroGen specification.
      * In order to modify the interfaces you should (re)use oroGen and rely on the associated workflow.
@@ -18,34 +16,36 @@ namespace phidgets {
      * The name of a TaskContext is primarily defined via:
      \verbatim
      deployment 'deployment_name'
-         task('custom_task_name','phidgets::TemperatureTask')
+         task('custom_task_name','phidgets::InterfaceTask')
      end
      \endverbatim
      *  It can be dynamically adapted when the deployment is called with a prefix argument. 
      */
-    class TemperatureTask : public TemperatureTaskBase
+    class InterfaceTask : public InterfaceTaskBase
     {
-	friend class TemperatureTaskBase;
+	friend class InterfaceTaskBase;
     protected:
-        _CPhidgetTemperatureSensor* mPhidget;
+        int mNumInputs;
+        int mNumOutputs;
+        int mNumSensors;
 
     public:
-        /** TaskContext constructor for TemperatureTask
+        /** TaskContext constructor for InterfaceTask
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
          */
-        TemperatureTask(std::string const& name = "phidgets::TemperatureTask");
+        InterfaceTask(std::string const& name = "phidgets::InterfaceTask");
 
-        /** TaskContext constructor for TemperatureTask 
+        /** TaskContext constructor for InterfaceTask 
          * \param name Name of the task. This name needs to be unique to make it identifiable for nameservices. 
          * \param engine The RTT Execution engine to be used for this task, which serialises the execution of all commands, programs, state machines and incoming events for a task. 
          * 
          */
-        TemperatureTask(std::string const& name, RTT::ExecutionEngine* engine);
+        InterfaceTask(std::string const& name, RTT::ExecutionEngine* engine);
 
-        /** Default deconstructor of TemperatureTask
+        /** Default deconstructor of InterfaceTask
          */
-	~TemperatureTask();
+	~InterfaceTask();
 
         /** This hook is called by Orocos when the state machine transitions
          * from PreOperational to Stopped. If it returns false, then the
@@ -104,6 +104,12 @@ namespace phidgets {
          * before calling start() again.
          */
         void cleanupHook();
+
+        /** Returns the port name for the given analog input
+         *
+         * Returns an empty string if this input is not pushed to a port
+         */
+        std::string getPortNameForAnalogInput(int index) const;
     };
 }
 

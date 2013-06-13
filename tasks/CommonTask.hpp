@@ -1,15 +1,15 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.hpp */
 
-#ifndef PHIDGETS_TEMPERATURETASK_TASK_HPP
-#define PHIDGETS_TEMPERATURETASK_TASK_HPP
+#ifndef PHIDGETS_COMMONTASK_TASK_HPP
+#define PHIDGETS_COMMONTASK_TASK_HPP
 
-#include "phidgets/TemperatureTaskBase.hpp"
+#include "phidgets/CommonTaskBase.hpp"
 
-struct _CPhidgetTemperatureSensor;
+struct _CPhidget;
 
 namespace phidgets {
 
-    /*! \class TemperatureTask 
+    /*! \class CommonTask 
      * \brief The task context provides and requires services. It uses an ExecutionEngine to perform its functions.
      * Essential interfaces are operations, data flow ports and properties. These interfaces have been defined using the oroGen specification.
      * In order to modify the interfaces you should (re)use oroGen and rely on the associated workflow.
@@ -18,34 +18,37 @@ namespace phidgets {
      * The name of a TaskContext is primarily defined via:
      \verbatim
      deployment 'deployment_name'
-         task('custom_task_name','phidgets::TemperatureTask')
+         task('custom_task_name','phidgets::CommonTask')
      end
      \endverbatim
      *  It can be dynamically adapted when the deployment is called with a prefix argument. 
      */
-    class TemperatureTask : public TemperatureTaskBase
+    class CommonTask : public CommonTaskBase
     {
-	friend class TemperatureTaskBase;
+	friend class CommonTaskBase;
+
+        _CPhidget* mPhidget;
+
     protected:
-        _CPhidgetTemperatureSensor* mPhidget;
+        void setPhidgetHandle(_CPhidget* handle);
 
     public:
-        /** TaskContext constructor for TemperatureTask
+        /** TaskContext constructor for CommonTask
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
          */
-        TemperatureTask(std::string const& name = "phidgets::TemperatureTask");
+        CommonTask(std::string const& name = "phidgets::CommonTask");
 
-        /** TaskContext constructor for TemperatureTask 
+        /** TaskContext constructor for CommonTask 
          * \param name Name of the task. This name needs to be unique to make it identifiable for nameservices. 
          * \param engine The RTT Execution engine to be used for this task, which serialises the execution of all commands, programs, state machines and incoming events for a task. 
          * 
          */
-        TemperatureTask(std::string const& name, RTT::ExecutionEngine* engine);
+        CommonTask(std::string const& name, RTT::ExecutionEngine* engine);
 
-        /** Default deconstructor of TemperatureTask
+        /** Default deconstructor of CommonTask
          */
-	~TemperatureTask();
+	~CommonTask();
 
         /** This hook is called by Orocos when the state machine transitions
          * from PreOperational to Stopped. If it returns false, then the
