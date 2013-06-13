@@ -5,6 +5,8 @@ import_types_from "phidgetsTypes.hpp"
 
 # Base implementation for all phidgets
 task_context 'CommonTask' do
+    abstract
+
     # This is the default from now on, and should not be removed. Rock will
     # transition to a setup where all components use a configuration step.
     needs_configuration
