@@ -1,5 +1,4 @@
 #include "AnalogDevices.hpp"
-#include <phidgets/Types.hpp>
 #include "InterfaceTask.hpp"
 #include <phidget21.h>
 
