@@ -1,9 +1,9 @@
 #ifndef phidgets_TYPES_HPP
 #define phidgets_TYPES_HPP
 
-#include <base/time.h>
+#include <base/Time.hpp>
 #include <vector>
-#include <base/float.h>
+#include <base/Float.hpp>
 
 namespace phidgets {
     /** Temperature reading */
